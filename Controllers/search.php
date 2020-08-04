@@ -7,21 +7,33 @@ header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, X-Requested-With");
 
+$metodo = $_SERVER['REQUEST_METHOD'];
+
+if($metodo != "POST"){
+    http_response_code(405);
+    echo json_encode(array(
+        "code" => 405,
+        "message" => "Método no permitido ($metodo) - solo 'POST' ",
+    ));
+    exit();
+}
 if (!isset($_POST['search']) || (trim($_POST['search']) == false)){
     //Si no existe critério de búsqueda se devuelve error 400
-     http_response_code(400);
-     echo json_encode(array(
-         "code" => 400,
-         "message" => "Criterio de búsqueda vacío."
-        ));
+    http_response_code(400);
+    echo json_encode(array(
+        "code" => 400,
+        "message" => "Criterio de búsqueda vacío."
+    ));
+    exit();
 }else{
     $resultados = [];
+    $criteria = trim($_POST['search']);
     //Resultados de WebService: Crcind
-    $cn = searchCrcind(trim($_POST['search']));
+    $cn = searchCrcind($criteria);
     //Resultados de API: iTunes
-    $iTunes = searchITunes(trim($_POST['search']));
+    $iTunes = searchITunes($criteria);
     //Resultados de API: TvMaze
-    $tvMaze = searchTvMaze(trim($_POST['search']));
+    $tvMaze = searchTvMaze($criteria);
 
     //Verifica si existen registros
     if ($iTunes['totalCount'] > 0 || $tvMaze['totalCount'] > 0 || $cn['totalCount'] > 0){

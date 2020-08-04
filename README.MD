@@ -15,9 +15,11 @@ El API es de uso público, no requiere autorización.
 ### CÓDIGOS DE RESPUESTA
 **200**: Búsqueda Éxitosa
 
-**204**: Recursos no encontrados
+**204**: Registros no Encontrados
 
 **400**: Error en parámetro(s)
+
+**405**: Método no permitido
 
 **500**: Error desconocido
 
@@ -69,6 +71,13 @@ El API es de uso público, no requiere autorización.
     {
         "code": 400,
         "message": "Criterio de búsqueda vacío."
+    }
+
+   #### Ejemplos Response Body | criterio de búsqueda: "adam"  (vacío) | método GET | Código 405
+
+    {
+        "code": 405,
+        "message": "Método no permitido (GET) - solo 'POST' "
     }
 
    #### Ejemplos Response Body | criterio de búsqueda: adam  | Código 500 | En caso de alguna falla de comunicación o en el servidor
